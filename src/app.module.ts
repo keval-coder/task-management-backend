@@ -4,9 +4,10 @@ import { AppService } from './app.service';
 import { APP_FILTER } from '@nestjs/core';
 import { AllExceptionsFilter } from './utils/error-handling/exception.filter';
 import { ErrorLogger } from './utils/logger/logger.service';
+import { DatabaseModule } from './database/database.module';
 
 @Module({
-  imports: [],
+  imports: [DatabaseModule],
   controllers: [AppController],
   providers: [
     AppService,

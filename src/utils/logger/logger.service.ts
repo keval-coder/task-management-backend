@@ -1,5 +1,5 @@
-import { BadRequestException, Injectable, LoggerService } from '@nestjs/common';
-import { readFileSync, writeFile } from 'fs';
+import { Injectable, LoggerService } from '@nestjs/common';
+import { readFileSync, writeFileSync } from 'fs';
 import { join } from 'path';
 
 @Injectable()
@@ -35,10 +35,6 @@ export class ErrorLogger implements LoggerService {
     const finalData =
       parsedData && parsedData.length ? [...parsedData, newData] : [newData];
 
-    writeFile(filePath, JSON.stringify(finalData), (err) => {
-      if (err) {
-        throw new BadRequestException(err.message);
-      }
-    });
+    writeFileSync(filePath, JSON.stringify(finalData));
   }
 }
