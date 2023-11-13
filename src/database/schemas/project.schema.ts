@@ -12,7 +12,10 @@ export class Project {
   description: string;
 
   @Prop()
-  total_hours: string;
+  status: boolean;
+
+  @Prop()
+  total_hours: number;
 
   @Prop()
   completed_date: Date;

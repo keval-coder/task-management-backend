@@ -10,6 +10,9 @@ export class Task {
   @Prop()
   task_name: string;
 
+  @Prop()
+  description: string;
+
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: Project.name })
   project: Project;
 
@@ -21,7 +24,10 @@ export class Task {
   status: string;
 
   @Prop()
-  total_hours: string;
+  starting_date: Date;
+
+  @Prop()
+  total_hours: number;
 }
 
 export const TaskSchema = SchemaFactory.createForClass(Task);
