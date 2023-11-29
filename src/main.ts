@@ -8,6 +8,9 @@ async function bootstrap() {
     logger: new ErrorLogger(),
   });
 
+  //CORS ERROR HANDLER
+  app.enableCors();
+
   // SWAGGER SETUP
   const config = new DocumentBuilder()
     .setTitle('Task Management Backend')

@@ -39,11 +39,13 @@ export class UserService {
     return 'User register successfully.';
   }
 
-  async findOneUser(username: string) {
+  async findOneUser(username: string): Promise<UserDocument> {
     const user = await this.userModel.findOne({
       username,
     });
     if (!user) throw new NotFoundException('User is not found!');
+
+    console.log(user);
 
     return user;
   }

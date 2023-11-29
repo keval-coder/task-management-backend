@@ -6,7 +6,7 @@ import { LoginDto } from './auth.dto';
 import { UserService } from '../users/users.service';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
-import { JwtTokenPayload } from '../utils/types/auth.type';
+import { JwtTokenPayload, LoginUserT } from '../utils/types/auth.type';
 
 @Injectable()
 export class AuthService {
@@ -30,8 +30,52 @@ export class AuthService {
       username: user.username,
     };
 
+    const refreshToken = await this.jwtService.signAsync(payload, {
+      expiresIn: '24h',
+    });
+
+    await this.userModel.findByIdAndUpdate(user._id, {
+      $set: {
+        refresh_token: refreshToken,
+      },
+    });
+
     return {
-      access_token: await this.jwtService.signAsync(payload),
+      access_token: await this.jwtService.signAsync(payload, {
+        expiresIn: '1h',
+      }),
+      refresh_token: refreshToken,
+      user: {
+        username: user.username,
+        status: user.status,
+      },
+    };
+  }
+
+  async refereshToken(user: LoginUserT) {
+    const userExist = await this.userService.findOneUser(user.username);
+    if (!userExist) throw new BadRequestException('Username is not valid.');
+
+    const payload: JwtTokenPayload = {
+      sub: String(userExist._id),
+      username: user.username,
+    };
+
+    const refreshToken = await this.jwtService.signAsync(payload, {
+      expiresIn: '24h',
+    });
+
+    await this.userModel.findByIdAndUpdate(userExist._id, {
+      $set: {
+        refresh_token: refreshToken,
+      },
+    });
+
+    return {
+      access_token: await this.jwtService.signAsync(payload, {
+        expiresIn: '1h',
+      }),
+      refresh_token: refreshToken,
     };
   }
 }
